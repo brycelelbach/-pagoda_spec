@@ -1,0 +1,64 @@
+14:11 <@wash> K-ballo: What's the deal with promise allocator support?
+14:11 <@wash> Is it one of the things that has allocator support that we removed or want to remove because it's
+              annoying?
+14:12 <@K-ballo> it's a thing that was removed because people didn't understand it
+14:12 <@K-ballo> we didn't want it removed
+14:12 <@hkaiser> but we never implemented it
+14:12 <@K-ballo> people got confused and thought it had the same problems than std::function
+14:12 <@K-ballo> and then they removed allocator support for one but not both of promise and packaged_task, don't
+                 remember which is which at the moment
+14:14 <@hkaiser> K-ballo: do you think we should add allocator support for promise?
+14:14 <@K-ballo> hkaiser: not unless we have a use case for it
+14:14 <@hkaiser> this might allow reducing the overhead for future creation
+14:15 <@heller> this will come in handy for pure RDMA support
+14:15 <@heller> where the shared state is registered with the NIC, so you can directly rma get into it
+14:16 <@heller> or for GPU related stuff, for setting the shared state directly from within the GPU
+14:17 <@hkaiser> that's what I was thikning of, yes
+14:17 <@heller> requires a proper full empty bit again ;)
+14:17 <@hkaiser> also for simply using special allocators for certain types
+14:17 <@heller> right
+14:17 <@heller> like unused
+14:18 <@hkaiser> K-ballo: did that ever get specified?
+14:18 <@hkaiser> I don't remember seeing this
+14:18 <@K-ballo> uhm?
+14:18 <@heller> hkaiser: celebrate!
+14:18 <@heller> :D
+14:18 <@hkaiser> K-ballo: is there a document proposing allocator support for promise or packaged_task?
+14:19 <@heller> khuck: you should ask for a timeslot to test my suggestion ;)
+14:19 <@hkaiser> heller: you too                             
+14:14 <@hkaiser> K-ballo: do you think we should add allocator support for promise?
+14:14 <@K-ballo> hkaiser: not unless we have a use case for it
+14:14 <@hkaiser> this might allow reducing the overhead for future creation
+14:15 <@heller> this will come in handy for pure RDMA support
+14:15 <@heller> where the shared state is registered with the NIC, so you can directly rma get into it
+14:16 <@heller> or for GPU related stuff, for setting the shared state directly from within the GPU
+14:17 <@hkaiser> that's what I was thikning of, yes
+14:17 <@heller> requires a proper full empty bit again ;)
+14:17 <@hkaiser> also for simply using special allocators for certain types
+14:17 <@heller> right
+14:17 <@heller> like unused
+14:18 <@hkaiser> K-ballo: did that ever get specified?
+14:18 <@hkaiser> I don't remember seeing this
+14:18 <@K-ballo> uhm?
+14:18 <@heller> hkaiser: celebrate!
+14:18 <@heller> :D
+14:18 <@hkaiser> K-ballo: is there a document proposing allocator support for promise or packaged_task?
+14:19 <@heller> khuck: you should ask for a timeslot to test my suggestion ;)
+14:19 <@hkaiser> heller: you too
+14:19 <@heller> hkaiser: not that I am aware of
+14:19 <@K-ballo> wash: so, promise still has allocator support, packaged_task got it removed but for the wrong
+                 reasons (and we'd should put it back)
+14:19 <@K-ballo> hkaiser: maybe, it was part of C++11
+14:19 <@heller> hkaiser: I am going to bed and kick of the LF tomorrow
+14:20 <@hkaiser> K-ballo: was it?
+14:20 <@K-ballo> yep
+14:21 <@hkaiser> ok, wasn't even aware of that
+14:21 <@hkaiser> ok, I see it now
+14:21 -!- Matombo [~Matombo@p57991A0C.dip0.t-ipconnect.de] has joined #ste||ar
+14:24 <@hkaiser> K-ballo: do you see any caveats in implementing allocator support for promises for our stuff?
+14:24 <@K-ballo> there's some factories involved, is that for remote promises only?
+14:25 <@hkaiser> you mean the futures_factory?
+14:26 <@hkaiser> K-ballo: those are just different asynchronous providers and would need allocator support as well
+14:26 <@K-ballo> yes, the futures_factory, I don't know anything about those
+14:27 <@hkaiser> those are very similar to packaged_task
+14:29 <@hkaiser> I'll create a ticket to look into this after the release 
