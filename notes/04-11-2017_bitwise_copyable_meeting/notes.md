@@ -1,5 +1,7 @@
 Attending: Bryce, Bachan
 
+Remove the class-wide requirements on T from global_ptr. Add the requirement to the members, and make the members 
+
 What's the best way to implement a standard layout tuple?
 
 Why is tuple not TriviallyCopyable?
